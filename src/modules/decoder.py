@@ -4,17 +4,35 @@ import torch.nn as nn
 sys.path.append("..")
 from layers import autoencoder as l
 
+#decoder as in https://arxiv.org/pdf/2012.09841
+
 class Decoder(nn.Module):
     def __init__(self, *, ch, out_ch, ch_mult=(1,2,4,8), num_res_blocks,
-                 attn_resolutions, dropout=0.0, resamp_with_conv=True, in_channels,
+                 attn_resolutions, dropout=0.0, resamp_with_conv=True,
                  resolution, z_channels, give_pre_end=False, **ignorekwargs):
+
+            r"""
+            Args:
+                ch (int): image channel resampling.
+                out_ch (int): output channels.
+                ch_mult (int): channel multiplier.
+                num_res_blocks (int): res blocks per channel multiplier.
+                attn_resolutions (int): image height at which to applie attention.
+                resolution (float): dropout.
+                resamp_with_conv (bool): upsample with convolutions.
+                resolution (int): image height.
+                z_channels (int): output channels.
+                give_pre_end (bool): resample output channels with out_ch.
+            """
+
+
+
         super().__init__()
         self.ch = ch
         self.temb_ch = 0
         self.num_resolutions = len(ch_mult)
         self.num_res_blocks = num_res_blocks
         self.resolution = resolution
-        self.in_channels = in_channels
         self.give_pre_end = give_pre_end
 
 
@@ -72,6 +90,14 @@ class Decoder(nn.Module):
                                         padding=1)
 
     def forward(self, z):
+
+            r"""
+            Args:
+                input (torch.Tensor): with shape `(Batch,Channel,Hight, Wide)`.
+            Returns:
+                output frames, with shape `(Batch,Channel,Hight, Wide)`
+            """
+
         #assert z.shape[1:] == self.z_shape[1:]
         self.last_z_shape = z.shape
 

@@ -5,12 +5,28 @@ import copy
 sys.path.append("..")
 from layers import transformer as l
 
+#standard transformer with cross attention
+
 class transformer(nn.Module):
     def __init__(self,n_embd = 768,n_head = None,train = True,n_ctx = None,code_block=None,n_layer = None,mask = False,cross = False,n_spe = 0):
+
+            r"""
+            Args:
+                n_embd (int): embedding dimension.
+                n_head (int): attention heads.
+                train (bool): training mode.
+                n_layer (int): number of transformer layers.
+                n_ctx (int): sequence length.
+                cross (bool): use cross attention.
+                code_block (int): vocab. size.
+                mask (bool): use unidirectional mask.
+                n_spe (int): number of special tokens for finetuning.
+            """
+
         super(transformer, self).__init__()
         
         self.train = train
-        self.n_vocab = code_block.num_embeddings + n_spe
+        self.n_vocab = code_block + n_spe
         self.n_embd = n_embd
         self.n_layer = n_layer
         self.n_spe = n_spe
@@ -21,7 +37,7 @@ class transformer(nn.Module):
         nn.init.normal_(wpe, std=0.01)
         self.wpe = torch.nn.parameter.Parameter(wpe)
         
-        wte = torch.empty(code_block.num_embeddings, self.n_embd)
+        wte = torch.empty(code_block, self.n_embd)
         nn.init.normal_(wte, std=0.02)
         self.wte = torch.nn.parameter.Parameter(wte)
         

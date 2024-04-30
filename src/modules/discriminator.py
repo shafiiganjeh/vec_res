@@ -55,10 +55,20 @@ class NLayerDiscriminator(nn.Module):
         return self.model(input)
 
 
-
+#simplified u-net discriminator 
 class Unet_disc(nn.Module):
 
     def __init__(self,res = (256,512),inp_filter =  1,nonlinearity = l.dsc_nonlinearity,kernel = 3,filters = [8,16,32,64,128,256],down_scale = [1,2,1,2,1,2]):
+
+            r"""
+            Args:
+                res (int): input resolution.
+                inp_filter (int):input channel size.
+                nonlinearity (torch.nn.Module): nonlinearity.
+                kernel (int): convolution kernel size.
+                down_scale (list of int): down scale per filter.
+                filters (list of int): filters with channel size.
+            """
 
         super(Unet_disc, self).__init__()
         
@@ -140,9 +150,17 @@ class Unet_disc(nn.Module):
             
         return h,h_low,Hi
     
-
+#standard u-net discriminator
 class simple_UNet(nn.Module):
     def __init__(self, n_channels = 1, n_classes = 1, bilinear=False):
+
+            r"""
+            Args:
+                n_classes (int):output channel size.
+                n_channels (int):input channel size.
+                bilinear (bool):bilinear downsampling.
+            """
+
         super(simple_UNet, self).__init__()
         self.n_channels = n_channels
         self.n_classes = n_classes
