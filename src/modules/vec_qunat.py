@@ -16,6 +16,17 @@ def orthogonal_loss_fn(t):
 class VectorQuantizer(nn.Module):
 
     def __init__(self,  num_embeddings = 8192, embedding_dim = 256, beta=0.25,train = True,l = 10,em_steps = 10):
+
+            r"""
+            Args:
+                embedding_dim (int): codebook embedding dimension.
+                num_embeddings (int): codebook embeddings.
+                train (bool): training mode.
+                beta (float): beta parameter for the quantization loss.
+                l (int): parameter for https://arxiv.org/abs/2112.00384.
+                em_steps (int): steps at which to revive dead codebooks.
+            """
+
         super(VectorQuantizer, self).__init__()
 
         self.embedding_dim = embedding_dim

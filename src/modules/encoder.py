@@ -4,10 +4,28 @@ import torch.nn as nn
 sys.path.append("..")
 from layers import autoencoder as l
 
+#encoder as in https://arxiv.org/pdf/2012.09841
+
 class Encoder(nn.Module):
-    def __init__(self, *, ch, out_ch, ch_mult=(1,2,4,8), num_res_blocks,
+    def __init__(self, *, ch, ch_mult=(1,2,4,8), num_res_blocks,
                   attn_resolutions, dropout=0.0, resamp_with_conv=True, in_channels,
                   resolution, z_channels, double_z=True, **ignore_kwargs):
+
+            r"""
+            Args:
+                ch (int): image channel resampling.
+                in_channels (int): image channels.
+                ch_mult (int): channel multiplier.
+                num_res_blocks (int): res blocks per channel multiplier.
+                attn_resolutions (int): image height at which to applie attention.
+                resolution (float): dropout.
+                resamp_with_conv (bool): downsample with convolutions.
+                resolution (int): image height.
+                z_channels (int): output channels.
+                double_z (bool): double output channels.
+            """
+
+
         super().__init__()
         self.ch = ch
         self.temb_ch = 0
@@ -70,6 +88,14 @@ class Encoder(nn.Module):
 
 
     def forward(self, x):
+
+            r"""
+            Args:
+                input (torch.Tensor): with shape `(Batch,Channel,Hight, Wide)`.
+            Returns:
+                output frames, with shape `(Batch,Channel,Hight, Wide)`
+            """
+
         #assert x.shape[2] == x.shape[3] == self.resolution, "{}, {}, {}".format(x.shape[2], x.shape[3], self.resolution)
 
         # timestep embedding
